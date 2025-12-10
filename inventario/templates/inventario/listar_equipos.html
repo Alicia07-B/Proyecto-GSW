@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Listado de Equipos</title>
+</head>
+<body>
+    <h1>Listado de Equipos</h1>
+   <a href="/inventario/agregar/">Crear Equipo</a>
+    <ul>
+        {% for equipo in equipos %}
+            <li>{{ equipo.descripcion }} - {{ equipo.precio_adquisicion }} USD</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

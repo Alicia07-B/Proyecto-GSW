@@ -1,0 +1,20 @@
+/* Estilos específicos para inventario */
+.inventario-table {
+    font-size: 0.9rem;
+}
+
+.equipo-card {
+    border-left: 4px solid #3498db;
+}
+
+.equipo-disponible {
+    background-color: #d4edda;
+}
+
+.equipo-mantenimiento {
+    background-color: #fff3cd;
+}
+
+.equipo-baja {
+    background-color: #f8d7da;
+}
