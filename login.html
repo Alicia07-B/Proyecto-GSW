@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Iniciar Sesión - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center align-items-center min-vh-75">
+        <div class="col-md-6 col-lg-5">
+            <div class="card card-custom">
+                <div class="card-header-custom text-center">
+                    <h4 class="mb-0"><i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión</h4>
+                </div>
+                <div class="card-body p-5">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            {% for error in form.non_field_errors %}
+                                {{ error }}<br>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        
+                        <div class="mb-4">
+                            <label for="username" class="form-label">
+                                <i class="bi bi-person me-2"></i>Usuario
+                            </label>
+                            <input type="text" class="form-control" id="username" name="username" 
+                                   placeholder="Ingrese su usuario" required autofocus>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="password" class="form-label">
+                                <i class="bi bi-lock me-2"></i>Contraseña
+                            </label>
+                            <input type="password" class="form-control" id="password" name="password" 
+                                   placeholder="Ingrese su contraseña" required>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
+                            </button>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <p class="text-muted">
+                                ¿No tienes una cuenta? 
+                                <a href="mailto:admin@gesinfra.edu" class="text-decoration-none">
+                                    Contacta al administrador
+                                </a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <img src="{% static 'img/logo.png' %}" alt="{{ site_name }}" height="40" class="mb-2">
+                <p class="text-muted small">
+                    Sistema de Gestión Integral<br>
+                    {{ site_name }} &copy; {{ current_year }}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

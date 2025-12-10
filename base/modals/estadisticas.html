@@ -1,0 +1,73 @@
+<!-- Modal de Estadísticas -->
+<div class="modal fade" id="estadisticasModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-graph-up me-2"></i>Estadísticas del Sistema
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card card-custom">
+                            <div class="card-body text-center">
+                                <h6>Distribución de Calificaciones</h6>
+                                <div class="chart-container">
+                                    <canvas id="estadisticasChart1"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card card-custom">
+                            <div class="card-body text-center">
+                                <h6>Estado de Equipos</h6>
+                                <div class="chart-container">
+                                    <canvas id="estadisticasChart2"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Métrica</th>
+                                <th>Valor</th>
+                                <th>Tendencia</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Promedio General</td>
+                                <td>8.5</td>
+                                <td><span class="text-success">↑ 2%</span></td>
+                            </tr>
+                            <tr>
+                                <td>Equipos Activos</td>
+                                <td>386</td>
+                                <td><span class="text-success">↑ 5%</span></td>
+                            </tr>
+                            <tr>
+                                <td>Tasa de Aprobación</td>
+                                <td>92%</td>
+                                <td><span class="text-success">↑ 3%</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('estadisticasModal').addEventListener('show.bs.modal', function() {
+    // Inicializar gráficos cuando se muestre el modal
+    inicializarGraficosEstadisticas();
+});
+</script>

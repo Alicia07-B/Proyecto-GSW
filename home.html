@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h1 class="card-title">Bienvenido a {{ site_name }}</h1>
+                    <p class="card-text">Sistema de Gestión Integral</p>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-4 mb-3">
+                            <a href="{% url 'calificaciones:listar_calificaciones' %}" class="btn btn-primary btn-lg w-100">
+                                <i class="bi bi-journal-text"></i><br>
+                                Calificaciones
+                            </a>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                           <a href="/inventario/">
+                                <i class="bi bi-pc-display"></i><br>
+                                Inventario
+                            </a>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <a href="{% url 'accesibilidad:index' %}" class="btn btn-info btn-lg w-100">
+                                <i class="bi bi-universal-access"></i><br>
+                                Accesibilidad
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <p>Para acceder a todas las funciones, por favor inicia sesión.</p>
+                        <a href="{% url 'login' %}" class="btn btn-outline-primary">
+                            <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

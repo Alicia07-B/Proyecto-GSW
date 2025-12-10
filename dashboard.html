@@ -1,0 +1,699 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - GESINFRA-WEB{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #3498db;
+        --success-color: #27ae60;
+        --warning-color: #f39c12;
+        --danger-color: #e74c3c;
+        --light-color: #ecf0f1;
+    }
+
+    .dashboard-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 40px 0;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+        margin-bottom: 20px;
+        border: none;
+        height: 100%;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .stat-card i {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        color: var(--secondary-color);
+    }
+
+    .stat-card .number {
+        font-size: 2.2rem;
+        font-weight: bold;
+        color: var(--primary-color);
+        margin: 10px 0;
+    }
+
+    .stat-card .label {
+        color: #6c757d;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .module-card {
+        height: 100%;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    .module-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .module-icon {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        color: var(--secondary-color);
+    }
+
+    .card-custom {
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+        border: none;
+        margin-bottom: 20px;
+    }
+
+    .card-custom:hover {
+        transform: translateY(-5px);
+    }
+
+    .card-header-custom {
+        background-color: var(--secondary-color);
+        color: white;
+        border-radius: 10px 10px 0 0 !important;
+        padding: 15px 20px;
+        border: none;
+    }
+
+    .btn-module {
+        padding: 15px;
+        font-size: 1.1rem;
+        border-radius: 10px;
+        border: none;
+        transition: all 0.3s;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 10px;
+        width: 100%;
+    }
+
+    .btn-module:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-module i {
+        font-size: 2rem;
+        margin-bottom: 10px;
+    }
+
+    .recent-activity {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .activity-item {
+        padding: 10px 15px;
+        border-left: 3px solid var(--secondary-color);
+        margin-bottom: 10px;
+        background: #f8f9fa;
+        border-radius: 5px;
+    }
+
+    .activity-item i {
+        color: var(--secondary-color);
+        margin-right: 10px;
+    }
+
+    .chart-container {
+        height: 250px;
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    .badge-status {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+        border-radius: 20px;
+    }
+
+    /* Colores para las tarjetas de módulos */
+    .card-calificaciones {
+        border-top: 4px solid #3498db;
+    }
+
+    .card-inventario {
+        border-top: 4px solid #2ecc71;
+    }
+
+    .card-accesibilidad {
+        border-top: 4px solid #9b59b6;
+    }
+
+    .card-mantenimiento {
+        border-top: 4px solid #f39c12;
+    }
+
+    .card-reportes {
+        border-top: 4px solid #e74c3c;
+    }
+
+    .card-configuracion {
+        border-top: 4px solid #34495e;
+    }
+
+    /* Animaciones */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .fade-in {
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .dashboard-header {
+            padding: 25px 0;
+        }
+        
+        .stat-card {
+            padding: 15px;
+        }
+        
+        .stat-card .number {
+            font-size: 1.8rem;
+        }
+        
+        .module-card {
+            margin-bottom: 15px;
+        }
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <!-- Encabezado del Dashboard -->
+    <div class="dashboard-header">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="display-5 mb-3">Bienvenido, {{ user.username }}!</h1>
+                <p class="lead mb-0">Panel de control principal - Sistema GESINFRA-WEB</p>
+                <small>Último acceso: {% now "d/m/Y H:i" %}</small>
+            </div>
+            <div class="col-md-4 text-end">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-light" id="refreshDashboard">
+                        <i class="bi bi-arrow-clockwise"></i> Actualizar
+                    </button>
+                    <button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#helpModal">
+                        <i class="bi bi-question-circle"></i> Ayuda
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tarjetas de Estadísticas -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4 fade-in">
+            <div class="stat-card text-center">
+                <i class="bi bi-people"></i>
+                <div class="number">{{ total_estudiantes|default:"1,254" }}</div>
+                <div class="label">Estudiantes Activos</div>
+                <div class="progress mt-3">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: 85%"></div>
+                </div>
+                <small class="text-muted">85% del total registrado</small>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-4 fade-in" style="animation-delay: 0.1s;">
+            <div class="stat-card text-center">
+                <i class="bi bi-pc-display"></i>
+                <div class="number">{{ total_equipos|default:"386" }}</div>
+                <div class="label">Equipos en Inventario</div>
+                <div class="progress mt-3">
+                    <div class="progress-bar bg-info" role="progressbar" style="width: 92%"></div>
+                </div>
+                <small class="text-muted">92% operativos</small>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-4 fade-in" style="animation-delay: 0.2s;">
+            <div class="stat-card text-center">
+                <i class="bi bi-journal-text"></i>
+                <div class="number">{{ total_calificaciones|default:"1,254" }}</div>
+                <div class="label">Calificaciones Registradas</div>
+                <div class="progress mt-3">
+                    <div class="progress-bar bg-primary" role="progressbar" style="width: 78%"></div>
+                </div>
+                <small class="text-muted">78% del periodo actual</small>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-4 fade-in" style="animation-delay: 0.3s;">
+            <div class="stat-card text-center">
+                <i class="bi bi-check-circle"></i>
+                <div class="number">{{ porcentaje_accesibilidad|default:"92" }}%</div>
+                <div class="label">Accesibilidad Cumplida</div>
+                <div class="progress mt-3">
+                    <div class="progress-bar bg-warning" role="progressbar" style="width: 92%"></div>
+                </div>
+                <small class="text-muted">Meta: 95%</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Módulos Principales -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2 class="mb-4"><i class="bi bi-grid-3x3-gap me-2"></i>Módulos del Sistema</h2>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card card-custom card-calificaciones">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="module-icon">
+                            <i class="bi bi-journal-text"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h5 class="card-title mb-1">Evaluación Curricular</h5>
+                            <p class="text-muted mb-0">Gestión académica y calificaciones</p>
+                        </div>
+                    </div>
+                    <p class="card-text">Administra calificaciones, registra evaluaciones y genera reportes académicos.</p>
+                    <div class="mt-3">
+                        <a href="#" class="btn btn-outline-primary btn-sm me-2">
+                            <i class="bi bi-plus-circle"></i> Nueva Calificación
+                        </a>
+                        <a href="#" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-graph-up"></i> Estadísticas
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card card-custom card-inventario">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="module-icon">
+                            <i class="bi bi-pc-display"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h5 class="card-title mb-1">Inventario Tecnológico</h5>
+                            <p class="text-muted mb-0">Control de equipos y recursos</p>
+                        </div>
+                    </div>
+                    <p class="card-text">Registra, monitorea y gestiona el inventario de equipos tecnológicos de la institución.</p>
+                    <div class="mt-3">
+                        <a href="#" class="btn btn-outline-success btn-sm me-2">
+                            <i class="bi bi-plus-circle"></i> Nuevo Equipo
+                        </a>
+                        <a href="#" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-list-check"></i> Ver Todo
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card card-custom card-accesibilidad">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="module-icon">
+                            <i class="bi bi-universal-access"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h5 class="card-title mb-1">Accesibilidad</h5>
+                            <p class="text-muted mb-0">Inclusión y recursos adaptados</p>
+                        </div>
+                    </div>
+                    <p class="card-text">Herramientas y recursos para garantizar la accesibilidad e inclusión educativa.</p>
+                    <div class="mt-3">
+                        <a href="#" class="btn btn-outline-info btn-sm me-2">
+                            <i class="bi bi-tools"></i> Herramientas
+                        </a>
+                        <a href="#" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-graph-up"></i> Métricas
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card card-custom card-mantenimiento">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="module-icon">
+                            <i class="bi bi-tools"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h5 class="card-title mb-1">Mantenimiento</h5>
+                            <p class="text-muted mb-0">Soporte técnico y reparaciones</p>
+                        </div>
+                    </div>
+                    <p class="card-text">Seguimiento de reportes técnicos, mantenimiento preventivo y correctivo.</p>
+                    <div class="mt-3">
+                        <span class="badge bg-danger">{{ total_reportes|default:"24" }} Pendientes</span>
+                        <a href="#" class="btn btn-outline-warning btn-sm ms-2">
+                            <i class="bi bi-plus-circle"></i> Nuevo Reporte
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card card-custom card-reportes">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="module-icon">
+                            <i class="bi bi-file-earmark-text"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h5 class="card-title mb-1">Reportes</h5>
+                            <p class="text-muted mb-0">Análisis y documentación</p>
+                        </div>
+                    </div>
+                    <p class="card-text">Genera informes detallados y análisis estadísticos de todos los módulos.</p>
+                    <div class="mt-3">
+                        <a href="#" class="btn btn-outline-danger btn-sm me-2">
+                            <i class="bi bi-download"></i> Descargar
+                        </a>
+                        <a href="#" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-gear"></i> Personalizar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card card-custom card-configuracion">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="module-icon">
+                            <i class="bi bi-gear"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h5 class="card-title mb-1">Configuración</h5>
+                            <p class="text-muted mb-0">Ajustes del sistema</p>
+                        </div>
+                    </div>
+                    <p class="card-text">Personaliza preferencias, usuarios, permisos y configuraciones del sistema.</p>
+                    <div class="mt-3">
+                        <a href="#" class="btn btn-outline-dark btn-sm me-2">
+                            <i class="bi bi-person"></i> Perfil
+                        </a>
+                        <a href="#" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-shield-check"></i> Seguridad
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Acceso Rápido y Actividad Reciente -->
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <div class="card card-custom">
+                <div class="card-header-custom">
+                    <h5 class="mb-0"><i class="bi bi-lightning-charge me-2"></i>Acceso Rápido</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <button class="btn btn-module btn-primary" onclick="window.location.href='#'">
+                                <i class="bi bi-journal-plus"></i><br>
+                                Nueva Calificación
+                            </button>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <button class="btn btn-module btn-success" onclick="window.location.href='#'">
+                                <i class="bi bi-pc-display"></i><br>
+                                Registrar Equipo
+                            </button>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <button class="btn btn-module btn-info" onclick="window.location.href='#'">
+                                <i class="bi bi-universal-access"></i><br>
+                                Reporte Accesibilidad
+                            </button>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <button class="btn btn-module btn-warning" onclick="window.location.href='#'">
+                                <i class="bi bi-tools"></i><br>
+                                Solicitar Mantenimiento
+                            </button>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <button class="btn btn-module btn-danger" onclick="window.location.href='#'">
+                                <i class="bi bi-file-earmark-pdf"></i><br>
+                                Generar Reporte
+                            </button>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <button class="btn btn-module btn-dark" onclick="window.location.href='#'">
+                                <i class="bi bi-person-circle"></i><br>
+                                Mi Perfil
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 mb-4">
+            <div class="card card-custom">
+                <div class="card-header-custom">
+                    <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Actividad Reciente</h5>
+                </div>
+                <div class="card-body recent-activity">
+                    <div class="activity-item">
+                        <i class="bi bi-journal-plus"></i>
+                        <strong>Nueva calificación registrada</strong><br>
+                        <small class="text-muted">Matemáticas - Estudiante: Ana López - Hace 5 min</small>
+                    </div>
+                    <div class="activity-item">
+                        <i class="bi bi-pc-display"></i>
+                        <strong>Equipo agregado al inventario</strong><br>
+                        <small class="text-muted">Computadora Dell - Aula 203 - Hace 2 horas</small>
+                    </div>
+                    <div class="activity-item">
+                        <i class="bi bi-tools"></i>
+                        <strong>Reporte de mantenimiento completado</strong><br>
+                        <small class="text-muted">Proyector Laboratorio B - Hace 1 día</small>
+                    </div>
+                    <div class="activity-item">
+                        <i class="bi bi-file-earmark-text"></i>
+                        <strong>Reporte académico generado</strong><br>
+                        <small class="text-muted">Periodo 2023-2 - Hace 2 días</small>
+                    </div>
+                    <div class="activity-item">
+                        <i class="bi bi-person-plus"></i>
+                        <strong>Nuevo usuario registrado</strong><br>
+                        <small class="text-muted">Prof. Carlos Méndez - Hace 3 días</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estado del Sistema -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-custom">
+                <div class="card-header-custom">
+                    <h5 class="mb-0"><i class="bi bi-heart-pulse me-2"></i>Estado del Sistema</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 text-center mb-3">
+                            <div class="mb-2">
+                                <i class="bi bi-database text-success" style="font-size: 2rem;"></i>
+                            </div>
+                            <h6>Base de Datos</h6>
+                            <span class="badge bg-success">Operativa</span>
+                        </div>
+                        <div class="col-md-3 text-center mb-3">
+                            <div class="mb-2">
+                                <i class="bi bi-server text-success" style="font-size: 2rem;"></i>
+                            </div>
+                            <h6>Servidor</h6>
+                            <span class="badge bg-success">Online</span>
+                        </div>
+                        <div class="col-md-3 text-center mb-3">
+                            <div class="mb-2">
+                                <i class="bi bi-shield-check text-warning" style="font-size: 2rem;"></i>
+                            </div>
+                            <h6>Seguridad</h6>
+                            <span class="badge bg-warning">Moderada</span>
+                        </div>
+                        <div class="col-md-3 text-center mb-3">
+                            <div class="mb-2">
+                                <i class="bi bi-cloud-arrow-up text-info" style="font-size: 2rem;"></i>
+                            </div>
+                            <h6>Backup</h6>
+                            <span class="badge bg-info">Reciente</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botón de Cerrar Sesión -->
+    <div class="row mt-4">
+        <div class="col-md-12 text-center">
+            <a href="{% url 'logout' %}" class="btn btn-danger btn-lg">
+                <i class="bi bi-box-arrow-right me-2"></i> Cerrar Sesión
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Ayuda -->
+<div class="modal fade" id="helpModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-question-circle me-2"></i>Ayuda Rápida</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <h6>Bienvenido al Dashboard</h6>
+                <p>Desde aquí puedes acceder rápidamente a todos los módulos del sistema:</p>
+                <ul>
+                    <li><strong>Evaluación Curricular:</strong> Gestiona calificaciones y seguimiento académico</li>
+                    <li><strong>Inventario Tecnológico:</strong> Control de equipos y recursos</li>
+                    <li><strong>Accesibilidad:</strong> Herramientas para inclusión educativa</li>
+                    <li><strong>Mantenimiento:</strong> Reportes y seguimiento técnico</li>
+                    <li><strong>Reportes:</strong> Generación de informes y análisis</li>
+                    <li><strong>Configuración:</strong> Ajustes del sistema y usuarios</li>
+                </ul>
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Usa los botones de "Acceso Rápido" para acciones frecuentes.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Botón de actualizar
+        document.getElementById('refreshDashboard').addEventListener('click', function() {
+            const btn = this;
+            const originalHTML = btn.innerHTML;
+            
+            btn.innerHTML = '<i class="bi bi-arrow-clockwise spin"></i> Actualizando...';
+            btn.disabled = true;
+            
+            // Simular actualización
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        });
+        
+        // Animación de tarjetas al cargar
+        const statCards = document.querySelectorAll('.fade-in');
+        statCards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+        });
+        
+        // Efecto hover en módulos
+        const moduleCards = document.querySelectorAll('.module-card');
+        moduleCards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transition = 'all 0.3s ease';
+            });
+        });
+        
+        // Mostrar hora actualizada
+        function updateTime() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            return now.toLocaleDateString('es-ES', options);
+        }
+        
+        // Agregar estilo para spinner
+        const style = document.createElement('style');
+        style.innerHTML = `
+            .spin {
+                animation: spin 1s linear infinite;
+            }
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Notificación de bienvenida
+        setTimeout(() => {
+            const toastHTML = `
+                <div class="toast show position-fixed bottom-0 end-0 m-3" role="alert">
+                    <div class="toast-header bg-primary text-white">
+                        <i class="bi bi-bell me-2"></i>
+                        <strong class="me-auto">Bienvenido</strong>
+                        <small>Ahora</small>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+                    </div>
+                    <div class="toast-body">
+                        ¡Hola {{ user.username }}! Has iniciado sesión correctamente en GESINFRA-WEB.
+                    </div>
+                </div>
+            `;
+            
+            const toastContainer = document.createElement('div');
+            toastContainer.innerHTML = toastHTML;
+            document.body.appendChild(toastContainer);
+            
+            // Auto-ocultar después de 5 segundos
+            setTimeout(() => {
+                toastContainer.remove();
+            }, 5000);
+        }, 1000);
+    });
+</script>
+{% endblock %}
