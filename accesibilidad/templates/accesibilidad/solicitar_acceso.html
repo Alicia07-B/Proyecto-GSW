@@ -1,0 +1,58 @@
+
+{% extends 'accesibilidad/base.html' %}
+
+{% block title %}Solicitar Acceso{% endblock %}
+
+{% block content %}
+<div class="card">
+    <a href="{% url 'accesibilidad:listar_recursos' %}" class="btn" style="margin-bottom: 1rem;">
+        ← Volver a Recursos
+    </a>
+    
+    <h1 style="color: #667eea; margin-bottom: 1rem;">📝 Solicitar Acceso al Recurso</h1>
+    
+    <div style="background: #f8f9fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem;">
+        <p><strong>Recurso:</strong> [Nombre del Recurso]</p>
+        <p><strong>Tipo:</strong> [Tipo]</p>
+        <p><strong>Ubicación:</strong> [Ubicación]</p>
+    </div>
+    
+    <form method="POST" style="max-width: 600px;">
+        {% csrf_token %}
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">
+                Fecha de Inicio *
+            </label>
+            <input type="date" name="fecha_inicio" required 
+                   style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
+        </div>
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">
+                Fecha de Fin *
+            </label>
+            <input type="date" name="fecha_fin" required 
+                   style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
+        </div>
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">
+                Motivo de la Solicitud *
+            </label>
+            <textarea name="motivo" rows="4" required 
+                     style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;"
+                     placeholder="Describe el motivo por el cual necesitas este recurso..."></textarea>
+        </div>
+        
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn btn-success" style="flex: 1;">
+                ✅ Enviar Solicitud
+            </button>
+            <a href="{% url 'accesibilidad:listar_recursos' %}" class="btn" style="flex: 1;">
+                ❌ Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

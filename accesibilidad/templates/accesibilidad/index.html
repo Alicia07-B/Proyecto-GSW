@@ -1,0 +1,21 @@
+{% extends 'base.html' %}  <!-- Usa el base global -->
+{% load static %}
+
+{% block title %}Accesibilidad - Sistema GSW{% endblock %}
+
+{% block extra_css %}
+<!-- CSS específico de accesibilidad -->
+<link rel="stylesheet" href="{% static 'accesibilidad/css/accesibilidad.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>♿ Sistema de Accesibilidad</h1>
+    <!-- Tu contenido aquí -->
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- JS específico de accesibilidad -->
+<script src="{% static 'accesibilidad/js/accesibilidad.js' %}"></script>
+{% endblock %}

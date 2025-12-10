@@ -1,0 +1,50 @@
+{% extends 'accesibilidad/base.html' %}
+
+{% block title %}Detalle del Recurso{% endblock %}
+
+{% block content %}
+<div class="card">
+    <a href="{% url 'accesibilidad:listar_recursos' %}" class="btn" style="margin-bottom: 1rem;">
+        ← Volver a Recursos
+    </a>
+    
+    <h1 style="color: #667eea; margin-bottom: 1rem;">🔍 Detalle del Recurso</h1>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+        <div>
+            <h3>Información Básica</h3>
+            <p><strong>Nombre:</strong> {{ recurso.nombre }}</p>
+            <p><strong>Tipo:</strong> {{ recurso.get_tipo_display }}</p>
+            <p><strong>Ubicación:</strong> {{ recurso.ubicacion }}</p>
+            <p><strong>Cantidad Disponible:</strong> {{ recurso.cantidad }}</p>
+            <p><strong>Estado:</strong> <span style="color: green;">✅ {{ recurso.get_estado_display }}</span></p>
+        </div>
+        
+        <div>
+            <h3>Mantenimiento</h3>
+            <p><strong>Fecha Adquisición:</strong> {{ recurso.fecha_adquisicion }}</p>
+            <p><strong>Último Mantenimiento:</strong> {{ recurso.ultimo_mantenimiento }}</p>
+            <p><strong>Próximo Mantenimiento:</strong> {{ recurso.proximo_mantenimiento }}</p>
+            
+            {% if recurso.necesita_mantenimiento %}
+                <div class="alert alert-error">
+                    ⚠️ Este recurso necesita mantenimiento
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div style="margin-top: 2rem;">
+        <h3>Descripción</h3>
+        <p>{{ recurso.descripcion }}</p>
+    </div>
+    
+    <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+        <a href="{% url 'accesibilidad:solicitar_acceso' recurso_id=recurso.id %}" class="btn btn-success">
+            📝 Solicitar Acceso
+        </a>
+        <button class="btn">✏️ Editar</button>
+        <button class="btn btn-danger">🗑️ Eliminar</button>
+    </div>
+</div>
+{% endblock %}

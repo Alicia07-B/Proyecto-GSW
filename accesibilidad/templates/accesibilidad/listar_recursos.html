@@ -1,0 +1,57 @@
+{% extends 'accesibilidad/base.html' %}
+
+{% block title %}Recursos de Accesibilidad{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1 style="color: #667eea; margin-bottom: 1rem;">📋 Recursos de Accesibilidad</h1>
+    
+    <div style="margin-bottom: 2rem;">
+        <form method="GET" style="display: flex; gap: 1rem;">
+            <input type="text" name="q" placeholder="Buscar recursos..." 
+                   value="{{ request.GET.q }}" style="flex: 1; padding: 0.5rem;">
+            <button type="submit" class="btn">🔍 Buscar</button>
+            <a href="{% url 'accesibilidad:listar_recursos' %}" class="btn">↺ Limpiar</a>
+        </form>
+    </div>
+    
+    {% if recursos %}
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+            {% for recurso in recursos %}
+            <div class="card" style="border-left: 4px solid #667eea;">
+                <h3>{{ recurso.nombre }}</h3>
+                <p><strong>Tipo:</strong> {{ recurso.get_tipo_display }}</p>
+                <p><strong>Ubicación:</strong> {{ recurso.ubicacion }}</p>
+                <p><strong>Cantidad:</strong> {{ recurso.cantidad }}</p>
+                <p><strong>Estado:</strong> 
+                    {% if recurso.estado == 'activo' %}
+                        <span style="color: green;">✅ Activo</span>
+                    {% elif recurso.estado == 'inactivo' %}
+                        <span style="color: red;">❌ Inactivo</span>
+                    {% else %}
+                        <span style="color: orange;">🔧 Mantenimiento</span>
+                    {% endif %}
+                </p>
+                
+                <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                    <a href="{% url 'accesibilidad:detalle_recurso' recurso.id %}" class="btn" style="flex: 1;">
+                        👁️ Ver
+                    </a>
+                    <a href="{% url 'accesibilidad:solicitar_acceso' recurso.id %}" class="btn btn-success" style="flex: 1;">
+                        📝 Solicitar
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 3rem;">
+            <p style="font-size: 1.2rem; margin-bottom: 1.5rem;">📭 No hay recursos registrados</p>
+            <p>Ve al <a href="{% url 'admin:index' %}">panel de administración</a> para agregar recursos.</p>
+            <a href="{% url 'admin:index' %}" class="btn">
+                Ir al Admin
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

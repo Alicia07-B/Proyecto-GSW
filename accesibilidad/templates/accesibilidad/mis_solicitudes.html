@@ -1,0 +1,57 @@
+{% extends 'accesibilidad/base.html' %}
+
+{% block title %}Mis Solicitudes{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1 style="color: #667eea; margin-bottom: 1rem;">📋 Mis Solicitudes</h1>
+    
+    {% if solicitudes %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Recurso</th>
+                    <th>Fecha Solicitud</th>
+                    <th>Fecha Inicio</th>
+                    <th>Fecha Fin</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for solicitud in solicitudes %}
+                <tr>
+                    <td>{{ solicitud.id }}</td>
+                    <td>{{ solicitud.recurso.nombre }}</td>
+                    <td>{{ solicitud.fecha_solicitud|date:"d/m/Y" }}</td>
+                    <td>{{ solicitud.fecha_inicio|date:"d/m/Y" }}</td>
+                    <td>{{ solicitud.fecha_fin|date:"d/m/Y" }}</td>
+                    <td>
+                        {% if solicitud.estado == 'aprobada' %}
+                            <span style="color: green; font-weight: bold;">✅ Aprobada</span>
+                        {% elif solicitud.estado == 'pendiente' %}
+                            <span style="color: orange; font-weight: bold;">⏳ Pendiente</span>
+                        {% elif solicitud.estado == 'rechazada' %}
+                            <span style="color: red; font-weight: bold;">❌ Rechazada</span>
+                        {% elif solicitud.estado == 'completada' %}
+                            <span style="color: blue; font-weight: bold;">🏁 Completada</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <button class="btn" style="padding: 0.3rem 0.8rem;">👁️ Ver</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div style="text-align: center; padding: 3rem;">
+            <p style="font-size: 1.2rem; margin-bottom: 1.5rem;">📭 No tienes solicitudes registradas</p>
+            <a href="{% url 'accesibilidad:listar_recursos' %}" class="btn">
+                Ver Recursos Disponibles
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
