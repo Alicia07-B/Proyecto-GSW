@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Agregar Calificación</title>
+</head>
+<body>
+    <h1>Agregar Nueva Calificación</h1>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <p>Estudiante: <input type="text" name="estudiante"></p>
+        <p>Materia: <input type="text" name="materia"></p>
+        <p>Nota: <input type="number" step="0.01" name="nota"></p>
+        <button type="submit">Guardar</button>
+    </form>
+    
+    <a href="/calificaciones/">Volver a la lista</a>
+</body>
+</html>

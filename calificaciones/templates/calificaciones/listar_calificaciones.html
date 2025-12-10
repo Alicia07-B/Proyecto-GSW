@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calificaciones</title>
+</head>
+<body>
+    <h1>Lista de Calificaciones</h1>
+    
+<a href="{% url 'calificaciones:agregar_calificacion' %}">Agregar Nueva Calificación</a>
+    
+    {% if calificaciones %}
+        <table border="1">
+            <tr>
+                <th>Estudiante</th>
+                <th>Materia</th>
+                <th>Nota</th>
+                <th>Fecha</th>
+            </tr>
+            {% for calif in calificaciones %}
+            <tr>
+                <td>{{ calif.estudiante }}</td>
+                <td>{{ calif.materia }}</td>
+                <td>{{ calif.nota }}</td>
+                <td>{{ calif.fecha }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No hay calificaciones registradas.</p>
+    {% endif %}
+</body>
+</html>
